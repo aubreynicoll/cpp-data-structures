@@ -394,7 +394,7 @@ size_t Vector<T>::index_of(bool (*f)(T)) {
 
 template <class T>
 void Vector<T>::reverse() {
-  int *i, *j, temp;
+  T *i, *j, temp;
   i = _data;
   j = _data + _size - 1;
 
