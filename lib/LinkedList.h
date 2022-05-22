@@ -41,7 +41,7 @@ class LinkedList {
   void reverse();
   void rotate_left(size_t);
   void rotate_right(size_t);
-  void swap(LinkedList<T> &other);
+  void swap(LinkedList<T> &);
 };
 
 /**
