@@ -14,6 +14,7 @@
 #include <cstddef>
 #include <stdexcept>
 
+#include "IList.h"
 #include "IQueue.h"
 #include "ListNode.h"
 
@@ -21,7 +22,8 @@ template <typename T>
 class Listnode;
 
 template <typename T>
-class LinkedList : public IQueue<T, LinkedList<T>> {
+class LinkedList : public IList<T, LinkedList<T>>,
+                   public IQueue<T, LinkedList<T>> {
   ListNode<T> *_head;
   ListNode<T> *_tail;
   size_t _size;
@@ -37,23 +39,23 @@ class LinkedList : public IQueue<T, LinkedList<T>> {
   bool is_full() const override;
 
   /* Accessors */
-  T &at(size_t);
+  T &at(size_t) override;
   T &front() override;
   T &back() override;
 
   /* Mutators */
-  void insert(size_t, const T &);
-  void erase(size_t);
-  void push_front(const T &);
+  void insert(size_t, const T &) override;
+  void erase(size_t) override;
+  void push_front(const T &) override;
   void pop_front() override;
   void push_back(const T &) override;
-  void pop_back();
+  void pop_back() override;
 
   /* Nice to Haves */
   void clear() override;
-  void reverse();
-  void rotate_left(size_t);
-  void rotate_right(size_t);
+  void reverse() override;
+  void rotate_left(size_t) override;
+  void rotate_right(size_t) override;
   void swap(LinkedList<T> &) override;
 };
 
