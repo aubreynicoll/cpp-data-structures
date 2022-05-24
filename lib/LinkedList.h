@@ -1,15 +1,27 @@
+/**
+ * @file LinkedList.h
+ * @author Aubrey Nicoll (aubrey.nicoll@gmail.com)
+ * @brief A doubly-linked list implementation
+ * @version 0.1
+ * @date 2022-05-24
+ *
+ * @copyright Copyright (c) 2022
+ *
+ */
+
 #pragma once
 
 #include <cstddef>
 #include <stdexcept>
 
+#include "IQueue.h"
 #include "ListNode.h"
 
 template <typename T>
 class Listnode;
 
 template <typename T>
-class LinkedList {
+class LinkedList : public IQueue<T, LinkedList<T>> {
   ListNode<T> *_head;
   ListNode<T> *_tail;
   size_t _size;
@@ -20,28 +32,29 @@ class LinkedList {
   ~LinkedList();
 
   /* Utility */
-  size_t size() const;
-  bool is_empty() const;
+  size_t size() const override;
+  bool is_empty() const override;
+  bool is_full() const override;
 
   /* Accessors */
   T &at(size_t);
-  T &front();
-  T &back();
+  T &front() override;
+  T &back() override;
 
   /* Mutators */
   void insert(size_t, const T &);
   void erase(size_t);
   void push_front(const T &);
-  void pop_front();
-  void push_back(const T &);
+  void pop_front() override;
+  void push_back(const T &) override;
   void pop_back();
 
   /* Nice to Haves */
-  void clear();
+  void clear() override;
   void reverse();
   void rotate_left(size_t);
   void rotate_right(size_t);
-  void swap(LinkedList<T> &);
+  void swap(LinkedList<T> &) override;
 };
 
 /**
@@ -86,6 +99,18 @@ inline size_t LinkedList<T>::size() const {
 template <typename T>
 inline bool LinkedList<T>::is_empty() const {
   return !_size;
+}
+
+/**
+ * @brief Always returns false because LinkedList is dynamically sized. Part
+ * of the IQueue interface, since it will be used on other implementations.
+ *
+ * @tparam T
+ * @return bool
+ */
+template <typename T>
+inline bool LinkedList<T>::is_full() const {
+  return 0;
 }
 
 /**
