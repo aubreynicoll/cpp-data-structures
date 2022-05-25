@@ -112,7 +112,7 @@ inline bool LinkedList<T>::is_empty() const {
  */
 template <typename T>
 inline bool LinkedList<T>::is_full() const {
-  return 0;
+  return false;
 }
 
 /**
