@@ -22,8 +22,8 @@ template <typename T>
 class Listnode;
 
 template <typename T>
-class LinkedList : public IList<T, LinkedList<T>>,
-                   public IQueue<T, LinkedList<T>> {
+class LinkedList : public virtual IList<T, LinkedList<T>>,
+                   public virtual IQueue<T, LinkedList<T>> {
   ListNode<T> *_head;
   ListNode<T> *_tail;
   size_t _size;
