@@ -11,7 +11,6 @@
 
 #pragma once
 
-#include <cstddef>
 #include <stdexcept>
 
 #include "IList.h"

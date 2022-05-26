@@ -9,6 +9,10 @@
  *
  */
 
+#pragma once
+
+#include <cstddef>
+
 template <typename T, typename Container>
 class IList {
  public:
