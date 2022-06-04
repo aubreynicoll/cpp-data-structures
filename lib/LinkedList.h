@@ -18,9 +18,6 @@
 #include "ListNode.h"
 
 template <typename T>
-class Listnode;
-
-template <typename T>
 class LinkedList : public virtual IList<T, LinkedList<T>>,
                    public virtual IQueue<T, LinkedList<T>> {
   ListNode<T> *_head;

@@ -12,7 +12,6 @@ class ListNode {
   ListNode<T> *_prev;
   ListNode<T> *_next;
 
- public:
   /* Constructors */
   ListNode(const T &value);
   ~ListNode();
