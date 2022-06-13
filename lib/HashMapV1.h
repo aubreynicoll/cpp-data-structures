@@ -108,7 +108,7 @@ HashMap<K, V, Hash, Pred>::Node::~Node() {}
  * @tparam Pred
  */
 template <typename K, typename V, typename Hash, typename Pred>
-const size_t HashMap<K, V, Hash, Pred>::_max_capacity = 4294967296;
+const size_t HashMap<K, V, Hash, Pred>::_max_capacity = 4294967296UL;
 
 /**
  * @brief Cormen[267] states that when designing universal hashing functions, it
@@ -123,7 +123,7 @@ const size_t HashMap<K, V, Hash, Pred>::_max_capacity = 4294967296;
  * @tparam Pred
  */
 template <typename K, typename V, typename Hash, typename Pred>
-const size_t HashMap<K, V, Hash, Pred>::_large_prime_p = 4294967311;
+const size_t HashMap<K, V, Hash, Pred>::_large_prime_p = 4294967311UL;
 
 /**
  * @brief Random number generator for internal use
@@ -215,7 +215,7 @@ void HashMap<K, V, Hash, Pred>::increase_capacity() {
   Node **old_table = _table;
 
   _capacity = _capacity ? _capacity * 2 : 1;
-  _table = new Node *[_capacity];
+  _table = new Node *[_capacity] {};
 
   for (size_t i = 0; i < old_capacity; i++) {
     Node *node_to_move = old_table[i];
@@ -341,6 +341,8 @@ double HashMap<K, V, Hash, Pred>::load_factor() {
  */
 template <typename K, typename V, typename Hash, typename Pred>
 bool HashMap<K, V, Hash, Pred>::has(const K &key) {
+  if (!_size) return false;
+
   Node *curr_node = _table[hash(key)];
 
   while (curr_node) {
@@ -363,6 +365,8 @@ bool HashMap<K, V, Hash, Pred>::has(const K &key) {
  */
 template <typename K, typename V, typename Hash, typename Pred>
 V &HashMap<K, V, Hash, Pred>::get(const K &key) {
+  if (!_size) throw std::out_of_range("key not found");
+
   Node *curr_node = _table[hash(key)];
 
   while (curr_node) {
@@ -418,6 +422,8 @@ void HashMap<K, V, Hash, Pred>::insert(const K &key, const V &value) {
  */
 template <typename K, typename V, typename Hash, typename Pred>
 void HashMap<K, V, Hash, Pred>::erase(const K &key) {
+  if (!_size) return;
+
   size_t hashed_key = hash(key);
   Node *curr_node = _table[hashed_key];
   Node *prev_node = nullptr;

@@ -2,11 +2,43 @@
 
 #include <gtest/gtest.h>
 
-/* Having a ton of issues getting GTest to work with this data structure...
-Still investigating for now. I've independently tested the HashMap and it seems
-to work just fine. Will update tests later when I get to the bottom of it. */
+TEST(HashMapTest, EmptyInitialization) {
+  HashMap<char, int> map;
+  EXPECT_EQ(map.size(), 0);
+  EXPECT_EQ(map.capacity(), 0);
+}
 
-/* Must use typedef because template args confuses the macros */
-typedef HashMap<char, int> Map;
+TEST(HashMapTest, HandlesAlphabet) {
+  HashMap<char, int> map;
+  EXPECT_EQ(map.size(), 0);
+  EXPECT_EQ(map.capacity(), 0);
 
-TEST(HashMapV1Test, BasicConstructor) { EXPECT_NO_FATAL_FAILURE(Map map); }
+  for (int i = 0; i < 26; i++) {
+    EXPECT_FALSE(map.has('a' + i));
+    EXPECT_ANY_THROW(map.get('a' + i));
+  }
+
+  for (int i = 0; i < 26; i++) {
+    map.insert('a' + i, i);
+  }
+
+  EXPECT_EQ(map.size(), 26);
+  EXPECT_EQ(map.capacity(), 32);
+
+  for (int i = 0; i < 26; i++) {
+    EXPECT_TRUE(map.has('a' + i));
+    EXPECT_EQ(map.get('a' + i), i);
+  }
+
+  for (int i = 0; i < 26; i++) {
+    map.erase('a' + i);
+  }
+
+  EXPECT_EQ(map.size(), 0);
+  EXPECT_EQ(map.capacity(), 32);
+
+  for (int i = 0; i < 26; i++) {
+    EXPECT_FALSE(map.has('a' + i));
+    EXPECT_ANY_THROW(map.get('a' + i));
+  }
+}
