@@ -42,3 +42,12 @@ TEST(HashMapTest, HandlesAlphabet) {
     EXPECT_ANY_THROW(map.get('a' + i));
   }
 }
+
+TEST(HashMapTest, NoDuplicateKeys) {
+  HashMap<int, int> map;
+  map.insert(0, 0);
+  map.insert(0, 1);
+
+  EXPECT_EQ(map.size(), 1);
+  EXPECT_EQ(map.get(0), 1);
+}

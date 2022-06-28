@@ -395,6 +395,7 @@ void HashMap<K, V, Hash, Pred>::insert(const K &key, const V &value) {
 
   if (!_table[hashed_key]) {
     _table[hashed_key] = new Node(key, value);
+    _size++;
   } else {
     Node *curr_node = _table[hashed_key];
 
@@ -405,10 +406,9 @@ void HashMap<K, V, Hash, Pred>::insert(const K &key, const V &value) {
       curr_node->_val = value;
     } else {
       curr_node->_next = new Node(key, value);
+      _size++;
     }
   }
-
-  _size++;
 }
 
 /**
