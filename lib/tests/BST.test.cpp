@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 
+#include <algorithm>
 #include <iostream>
 #include <vector>
 
@@ -120,4 +121,24 @@ TEST(BSTTest, Erase) {
   EXPECT_FALSE(bst.search(55));
   EXPECT_FALSE(bst.search(1));
   EXPECT_FALSE(bst.search(101));
+}
+
+TEST(BSTTest, Iterator) {
+  BST<int> bst;
+  vector<int> nums{55, 45, 78, 99, 101, 1, 15, 66, 34, 3};
+
+  for (auto &num : nums) {
+    bst.insert(num);
+  }
+
+  sort(nums.begin(), nums.end());
+
+  auto nums_it = nums.begin();
+  auto bst_it = bst.begin();
+
+  while (nums_it != nums.end() && bst_it != bst.end()) {
+    EXPECT_EQ(*nums_it, *bst_it);
+    ++nums_it;
+    ++bst_it;
+  }
 }

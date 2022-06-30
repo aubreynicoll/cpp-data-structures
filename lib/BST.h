@@ -17,7 +17,6 @@
  *
  */
 
-// TODO Create an iterator class
 // TODO Overload operator==
 
 #pragma once
@@ -34,31 +33,81 @@ using namespace std;
 template <typename T, typename EQ = std::equal_to<T>,
           typename LT = std::less<T> >
 class BST {
+ private:
+  /* BST:: Private Classes */
+  class Node {
+   public:
+    /* BST::Node:: Constructors */
+    Node(const T &);
+    ~Node();
+
+    /* BST::Node:: Operators */
+    friend std::ostream &operator<<(std::ostream &stream, const Node &node) {
+      stream << node._val;
+      return stream;
+    };
+
+    /* BST::Node:: Member Data */
+    T _val;
+    Node *_parent;
+    Node *_left;
+    Node *_right;
+  };
+
+  class Iterator {
+   public:
+    /* BST::Iterator:: Constructors */
+    Iterator(Node *);
+    ~Iterator();
+
+    /* BST::Iterator:: Operators */
+    Iterator &operator++();
+    Iterator operator++(int);
+    bool operator!=(const Iterator &);
+    const T &operator*();
+
+   private:
+    /* BST::Iterator:: Member Data */
+    vector<Node *> stack;
+    Node *curr_node;
+  };
+
+  /* BST:: Helpers */
+  void transplant(Node *, Node *);
+
+  /* BST:: Member Data */
+  Node *_root;
+  size_t _size;
+
  public:
-  /* Constructors */
+  /* BST:: Constructors */
   BST();
   ~BST();
 
-  /* Utilities */
+  /* BST:: Utilities */
   size_t size();
   bool is_empty();
 
-  /* Accessors */
+  /* BST:: Iterators */
+  Iterator begin();
+  Iterator end();
+
+  /* BST:: Accessors */
   bool search(const T &);
   const T &min();
   const T &max();
   const T &predecessor(const T &);
   const T &successor(const T &);
 
-  /* Mutators */
+  /* BST:: Mutators */
   void insert(const T &);
   void erase(const T &);
 
-  /* Nice to Haves */
+  /* BST:: Nice to Haves */
   void clear();
   void swap(BST &);
 
-  /* Operators */
+  /* BST:: Operators */
   friend std::ostream &operator<<(std::ostream &stream, const BST &bst) {
     vector<Node *> stack;
     Node *curr_node = bst._root;
@@ -84,42 +133,7 @@ class BST {
     stream << "]";
     return stream;
   };
-
- private:
-  /* Private Classes */
-  class Node {
-   public:
-    /* BST::Node Constructors */
-    Node(const T &);
-    ~Node();
-
-    /* BST::Node Operators */
-    friend std::ostream &operator<<(std::ostream &stream, const Node &node) {
-      stream << node._val;
-      return stream;
-    };
-
-    /* BST::Node Member Data */
-    T _val;
-    Node *_parent;
-    Node *_left;
-    Node *_right;
-  };
-
-  /* Helpers */
-  void transplant(Node *, Node *);
-
-  /* Member Data */
-  Node *_root;
-  size_t _size;
 };
-
-template <typename T, typename EQ, typename LT>
-BST<T, EQ, LT>::Node::Node(const T &val)
-    : _val(val), _parent(nullptr), _left(nullptr), _right(nullptr) {}
-
-template <typename T, typename EQ, typename LT>
-BST<T, EQ, LT>::Node::~Node() {}
 
 template <typename T, typename EQ, typename LT>
 BST<T, EQ, LT>::BST() : _root(nullptr), _size(0) {}
@@ -137,6 +151,16 @@ size_t BST<T, EQ, LT>::size() {
 template <typename T, typename EQ, typename LT>
 bool BST<T, EQ, LT>::is_empty() {
   return !_size;
+}
+
+template <typename T, typename EQ, typename LT>
+typename BST<T, EQ, LT>::Iterator BST<T, EQ, LT>::begin() {
+  return Iterator(_root);
+}
+
+template <typename T, typename EQ, typename LT>
+typename BST<T, EQ, LT>::Iterator BST<T, EQ, LT>::end() {
+  return Iterator(nullptr);
 }
 
 template <typename T, typename EQ, typename LT>
@@ -328,4 +352,58 @@ void BST<T, EQ, LT>::transplant(Node *a, Node *b) {
   if (b) {
     b->_parent = a->_parent;
   }
+}
+
+template <typename T, typename EQ, typename LT>
+BST<T, EQ, LT>::Node::Node(const T &val)
+    : _val(val), _parent(nullptr), _left(nullptr), _right(nullptr) {}
+
+template <typename T, typename EQ, typename LT>
+BST<T, EQ, LT>::Node::~Node() {}
+
+template <typename T, typename EQ, typename LT>
+BST<T, EQ, LT>::Iterator::Iterator(Node *node) : curr_node(node) {
+  if (curr_node || stack.size()) {
+    while (curr_node) {
+      stack.push_back(curr_node);
+      curr_node = curr_node->_left;
+    }
+    curr_node = stack.back();
+    stack.pop_back();
+  }
+}
+
+template <typename T, typename EQ, typename LT>
+BST<T, EQ, LT>::Iterator::~Iterator() {}
+
+template <typename T, typename EQ, typename LT>
+typename BST<T, EQ, LT>::Iterator &BST<T, EQ, LT>::Iterator::operator++() {
+  if (curr_node) curr_node = curr_node->_right;
+  if (curr_node || stack.size()) {
+    while (curr_node) {
+      stack.push_back(curr_node);
+      curr_node = curr_node->_left;
+    }
+    curr_node = stack.back();
+    stack.pop_back();
+  }
+  return *this;
+}
+
+template <typename T, typename EQ, typename LT>
+typename BST<T, EQ, LT>::Iterator BST<T, EQ, LT>::Iterator::operator++(int i) {
+  Iterator temp = *this;
+  ++*this;
+  return temp;
+}
+
+template <typename T, typename EQ, typename LT>
+bool BST<T, EQ, LT>::Iterator::operator!=(
+    const BST<T, EQ, LT>::Iterator &other) {
+  return curr_node != other.curr_node;
+}
+
+template <typename T, typename EQ, typename LT>
+const T &BST<T, EQ, LT>::Iterator::operator*() {
+  return curr_node->_val;
 }
